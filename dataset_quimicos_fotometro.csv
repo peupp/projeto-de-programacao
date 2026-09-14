@@ -1,0 +1,9 @@
+chemical_name,wavelength_nm,molar_absorptivity_L_mol_cm,optical_path_cm
+Azul de Metileno,660,75000,1.0
+Azul de Metileno,630,42000,1.0
+Vermelho de Metila,520,18000,1.0
+Vermelho de Metila,540,12500,1.0
+Verde de Bromocresol,615,16000,1.0
+Verde de Bromocresol,430,9000,1.0
+Permanganato de Potássio,525,2200,1.0
+Permanganato de Potássio,545,1500,1.0
