@@ -1,9 +1,13 @@
-chemical_name,wavelength_nm,molar_absorptivity_L_mol_cm,optical_path_cm
-Azul de Metileno,660,75000,1.0
-Azul de Metileno,630,42000,1.0
-Vermelho de Metila,520,18000,1.0
-Vermelho de Metila,540,12500,1.0
-Verde de Bromocresol,615,16000,1.0
-Verde de Bromocresol,430,9000,1.0
-Permanganato de Potássio,525,2200,1.0
-Permanganato de Potássio,545,1500,1.0
+nome_quimico,cor_canal,comprimento_onda_nm,absortividade_molar_L_mol_cm,caminho_optico_cm
+Azul de Metileno,Azul (B),660,75000,1.0
+Azul de Metileno,Verde (G),530,15000,1.0
+Azul de Metileno,Vermelho (R),450,5000,1.0
+Vermelho de Metila,Azul (B),450,8000,1.0
+Vermelho de Metila,Verde (G),520,18000,1.0
+Vermelho de Metila,Vermelho (R),620,6000,1.0
+Verde de Bromocresol,Azul (B),430,9000,1.0
+Verde de Bromocresol,Verde (G),615,16000,1.0
+Verde de Bromocresol,Vermelho (R),660,4000,1.0
+Permanganato de Potássio,Azul (B),450,1000,1.0
+Permanganato de Potássio,Verde (G),525,2200,1.0
+Permanganato de Potássio,Vermelho (R),650,800,1.0
