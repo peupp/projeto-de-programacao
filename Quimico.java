@@ -33,5 +33,9 @@ public class Quimico {
   public double getCaminhoOptico(){
     return CaminhoOptico; 
   }
+
+  public String getNome(){
+    return Nome; 
+  }
   
 }

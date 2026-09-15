@@ -43,21 +43,26 @@ public class Main{
   }
 
   public static void main(String[] args) throws Exception {
-    int Io = 1000;
-    int I = 500; 
+    int[] Io = {1000, 1000, 1000 };
+    int[] I = {500, 549, 510}; 
     String ArquivoDataset = "dataset_quimicos_fotometro.csv";
     String NomeQuimico = "Permanganato de Potássio"; 
     Quimico[] Lista = new Quimico[3]; 
 
     Leitor(ArquivoDataset, NomeQuimico, Lista);
-    System.out.println(Lista[0].getCanal()); 
-    System.out.println(Lista[1].getCanal()); 
-    System.out.println(Lista[2].getCanal()); 
 
-    double Absorvancia= Calculator.CalculateAbsorvance(Io, I);  
-    System.out.println(Absorvancia); 
-    double Concentracion = Calculator.CalculateConcentration(Lista[0].getAbsortividade(), Lista[0].getCaminhoOptico(), Absorvancia); 
-    System.out.println(Concentracion);
+    for(int i = 0; i < 3; i++){
+      System.out.println(Lista[i].getNome()); 
+      System.out.println(Lista[i].getCanal()); 
+      double Absorvancia = Calculator.CalculateAbsorvance(Io[i], I[i]);  
+      System.out.print("Absorvancia: ");
+      System.out.println(Absorvancia); 
+      double Concentracion = Calculator.CalculateConcentration(Lista[i].getAbsortividade(), Lista[i].getCaminhoOptico(), Absorvancia); 
+      System.out.print("Concentracao: ");
+      System.out.println(Concentracion);
+      System.out.println("==========");
+    }
+
 
   }
 

@@ -2,7 +2,7 @@ import java.lang.Math;
 
 public class Calculator{
 
-  public static double CalculateAbsorvance(int InicialLux, int FinalLux){
+  public static double CalculateAbsorvance(double InicialLux, double FinalLux){
 
     double num = InicialLux / FinalLux   ;
 
