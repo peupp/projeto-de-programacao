@@ -9,7 +9,8 @@ public class Main{
   // Calcular absorvancia $ 
   // Pegar o resto dos dados do quimico no dataset $ 
   // Calcular concentracao para cada frequencia  
-  // Calcular diferenca das respostas de cada frequencia de luz para analisar consistencia e calcular a media da frequencia de luz 
+  // Calcular diferenca das respostas de cada frequencia de luz para analisar consistencia e calcular a media da frequencia de luz
+  // Calcular a média das concentracoes
 
   public static void Leitor(String NomeArquivo, String NomeQuimico, Quimico[] listaQuimicos) throws Exception {
     int contador = 0; 
@@ -47,7 +48,8 @@ public class Main{
     int[] I = {500, 549, 510}; 
     String ArquivoDataset = "dataset_quimicos_fotometro.csv";
     String NomeQuimico = "Permanganato de Potássio"; 
-    Quimico[] Lista = new Quimico[3]; 
+    Quimico[] Lista = new Quimico[3];
+    double[] concentracoes = new double[3];
 
     Leitor(ArquivoDataset, NomeQuimico, Lista);
 
@@ -57,12 +59,14 @@ public class Main{
       double Absorvancia = Calculator.CalculateAbsorvance(Io[i], I[i]);  
       System.out.print("Absorvancia: ");
       System.out.println(Absorvancia); 
-      double Concentracion = Calculator.CalculateConcentration(Lista[i].getAbsortividade(), Lista[i].getCaminhoOptico(), Absorvancia); 
+      double Concentracion = Calculator.CalculateConcentration(Lista[i].getAbsortividade(), Lista[i].getCaminhoOptico(), Absorvancia);
+      concentracoes[i] = Concentracion;
       System.out.print("Concentracao: ");
       System.out.println(Concentracion);
       System.out.println("==========");
     }
-
+      double media = Calculator.MediaDeConcentracao(concentracoes);
+      System.out.println("Média das concetrações: " + media);
 
   }
 

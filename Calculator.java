@@ -17,7 +17,14 @@ public class Calculator{
 
     return Concentration; 
   }
+public static double MediaDeConcentracao(double[] concetracoes){
+  double somaConcentracoes = 0;
+  for(int i = 0; i < concetracoes.length; i++){
+  somaConcentracoes += concetracoes[i];
 
+  }
+return somaConcentracoes / concetracoes.length;
+}
 
 
 }
