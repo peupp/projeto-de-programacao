@@ -67,6 +67,9 @@ public class Main{
     }
       double media = Calculator.MediaDeConcentracao(concentracoes);
       System.out.println("Média das concetrações: " + media);
+      System.out.println("==========");
+      double desvioPadrao = Calculator.desvioPadraoConcetracao(concentracoes);
+      System.out.println("desvio padrão das concentrações: " + desvioPadrao);
 
   }
 
