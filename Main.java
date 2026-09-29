@@ -85,7 +85,7 @@ public class Main{
       reader.close();
   }
 
-  public static void min(String[] args) throws Exception {
+ public static void min(String[] args) throws Exception {
 
     String ArquivoDataset = "dataset_quimicos_fotometro.csv";
 
@@ -236,8 +236,46 @@ public class Main{
                 double mediaAbsorbancia = (absorbanciaAzul + absorbanciaVerde + absorbanciaVermelho) / 3;
 
                 respostaAbsorbancia.setText("Resposta: " + (mediaAbsorbancia));
+            }
+        });
 
+        calcularConcentracao.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    double luxInicialAzul = Double.parseDouble(campoLuxInicialAzul.getText());
+                    double luxFinalAzul = Double.parseDouble(campoLuxFinalAzul.getText());
 
+                    double luxInicialVerde = Double.parseDouble(campoLuxInicialVerde.getText());
+                    double luxFinalVerde = Double.parseDouble(campoLuxFinalVerde.getText());
+
+                    double luxInicialVermelho = Double.parseDouble(campoLuxInicialVermelho.getText());
+                    double luxFinalVermelho = Double.parseDouble(campoLuxFinalVermelho.getText());
+
+                    double absorbanciaAzul = calculadora.CalculateAbsorvance(luxInicialAzul, luxFinalAzul);
+                    double absorbanciaVerde = calculadora.CalculateAbsorvance(luxInicialVerde, luxFinalVerde);
+                    double absorbanciaVermelho = calculadora.CalculateAbsorvance(luxInicialVermelho, luxFinalVermelho);
+
+                    double mediaAbsorbancia = (absorbanciaAzul + absorbanciaVerde + absorbanciaVermelho) / 3;
+
+                    double[] concentracoes = new double[3];
+
+                    String nomeQuimicoSelecionado = (String) dropdown.getSelectedItem();
+                    System.out.println(nomeQuimicoSelecionado);
+
+                    Quimico[] quimicoDados = new Quimico[3];
+                    Leitor(ArquivoDataset, nomeQuimicoSelecionado, quimicoDados);
+
+                    concentracoes[0] = calculadora.CalculateConcentration(quimicoDados[0].getAbsortividade(), quimicoDados[0].getCaminhoOptico(), absorbanciaAzul );
+                    concentracoes[1] = calculadora.CalculateConcentration(quimicoDados[1].getAbsortividade(), quimicoDados[1].getCaminhoOptico(), absorbanciaVerde);
+                    concentracoes[2] = calculadora.CalculateConcentration(quimicoDados[2].getAbsortividade(), quimicoDados[2].getCaminhoOptico(), absorbanciaVermelho);
+
+                    double mediaConcentracoes = calculadora.MediaDeConcentracao(concentracoes);
+                    respostaConcentracao.setText("Resposta: " + mediaConcentracoes);
+
+                } catch (Exception e) {
+                   e.printStackTrace();
+                }
 
             }
         });
