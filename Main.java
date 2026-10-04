@@ -564,6 +564,8 @@ public class Main{
 
         janela.setLayout(null);
         button.setBounds(0,0,40,50);
+        janela.setSize(1100, 1000);
+        janela.setLocationRelativeTo(null);
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         janela.setVisible(true);
     }
