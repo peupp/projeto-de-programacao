@@ -1,5 +1,9 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.Color;
@@ -10,6 +14,125 @@ import  java.awt.event.ActionListener;
 
 public class Main{
   int QuantidadeFrequencia = 3; 
+
+  private static String valorCSV(String valor) {
+    if (valor == null) {
+      return "";
+    }
+    return "\"" + valor.replace("\"", "\"\"") + "\"";
+  }
+
+  private static String valorHTML(String valor) {
+    if (valor == null) {
+      return "";
+    }
+    return valor
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace("\"", "&quot;")
+        .replace("'", "&#39;");
+  }
+
+  private static void exportarCalculosCSV(
+      File arquivo,
+      String nomeQuimico,
+      double[] luxIniciais,
+      double[] luxFinais,
+      Quimico[] dadosQuimico,
+      double[] absorbancias,
+      double[] concentracoes
+  ) throws IOException {
+    double mediaAbsorbancia = 0;
+    for (double absorbancia : absorbancias) {
+      mediaAbsorbancia += absorbancia;
+    }
+    mediaAbsorbancia /= absorbancias.length;
+
+    double mediaConcentracoes = Calculator.MediaDeConcentracao(concentracoes);
+    double desvioPadrao = Calculator.desvioPadraoConcetracao(concentracoes);
+
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo))) {
+      writer.write("tipo,nome_quimico,canal,lux_inicial,lux_final,absorbancia,absortividade_molar,caminho_optico,concentracao");
+      writer.newLine();
+
+      for (int i = 0; i < dadosQuimico.length; i++) {
+        writer.write(
+            "canal," + valorCSV(nomeQuimico) + "," + valorCSV(dadosQuimico[i].getCanal()) + ","
+                + luxIniciais[i] + "," + luxFinais[i] + "," + absorbancias[i] + ","
+                + dadosQuimico[i].getAbsortividade() + "," + dadosQuimico[i].getCaminhoOptico()
+                + "," + concentracoes[i]
+        );
+        writer.newLine();
+      }
+
+      writer.write("media_absorbancia," + valorCSV(nomeQuimico) + ",,,,"
+          + mediaAbsorbancia + ",,,");
+      writer.newLine();
+      writer.write("media_concentracao," + valorCSV(nomeQuimico) + ",,,,,,,"
+          + mediaConcentracoes);
+      writer.newLine();
+      writer.write("desvio_padrao_concentracao," + valorCSV(nomeQuimico) + ",,,,,,,"
+          + desvioPadrao);
+      writer.newLine();
+    }
+  }
+
+  private static void exportarCalculosHTML(
+      File arquivo,
+      String nomeQuimico,
+      double[] luxIniciais,
+      double[] luxFinais,
+      Quimico[] dadosQuimico,
+      double[] absorbancias,
+      double[] concentracoes
+  ) throws IOException {
+    double mediaAbsorbancia = 0;
+    for (double absorbancia : absorbancias) {
+      mediaAbsorbancia += absorbancia;
+    }
+    mediaAbsorbancia /= absorbancias.length;
+
+    double mediaConcentracoes = Calculator.MediaDeConcentracao(concentracoes);
+    double desvioPadrao = Calculator.desvioPadraoConcetracao(concentracoes);
+
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo))) {
+      writer.write("<!DOCTYPE html>");
+      writer.newLine();
+      writer.write("<html lang=\"pt-BR\"><head><meta charset=\"UTF-8\">");
+      writer.write("<title>Cálculos - " + valorHTML(nomeQuimico) + "</title>");
+      writer.write("<style>");
+      writer.write("body{font-family:Arial,sans-serif;margin:32px;color:#222;}");
+      writer.write("table{border-collapse:collapse;width:100%;margin-top:16px;}");
+      writer.write("th,td{border:1px solid #ccc;padding:8px;text-align:right;}");
+      writer.write("th{background:#f2f2f2;} th:first-child,td:first-child{text-align:left;}");
+      writer.write(".resumo{margin-top:24px;}");
+      writer.write("</style></head><body>");
+      writer.write("<h1>Resultados dos cálculos</h1>");
+      writer.write("<p><strong>Químico:</strong> " + valorHTML(nomeQuimico) + "</p>");
+      writer.write("<table><thead><tr>");
+      writer.write("<th>Canal</th><th>Lux inicial</th><th>Lux final</th>");
+      writer.write("<th>Absorbância</th><th>Absortividade molar</th>");
+      writer.write("<th>Caminho óptico</th><th>Concentração</th>");
+      writer.write("</tr></thead><tbody>");
+
+      for (int i = 0; i < dadosQuimico.length; i++) {
+        writer.write("<tr><td>" + valorHTML(dadosQuimico[i].getCanal()) + "</td>");
+        writer.write("<td>" + luxIniciais[i] + "</td><td>" + luxFinais[i] + "</td>");
+        writer.write("<td>" + absorbancias[i] + "</td>");
+        writer.write("<td>" + dadosQuimico[i].getAbsortividade() + "</td>");
+        writer.write("<td>" + dadosQuimico[i].getCaminhoOptico() + "</td>");
+        writer.write("<td>" + concentracoes[i] + "</td></tr>");
+      }
+
+      writer.write("</tbody></table><div class=\"resumo\"><h2>Resumo</h2><ul>");
+      writer.write("<li>Média da absorbância: " + mediaAbsorbancia + "</li>");
+      writer.write("<li>Média das concentrações: " + mediaConcentracoes + "</li>");
+      writer.write("<li>Desvio padrão das concentrações: " + desvioPadrao + "</li>");
+      writer.write("</ul></div></body></html>");
+      writer.newLine();
+    }
+  }
 
   // Pegar Io e I $
   // Calcular absorvancia $ 
@@ -290,6 +413,154 @@ public class Main{
         exportarCSV.setBounds(550, 900, 180, 25);
         exportarHTML.setBounds(750, 900, 180, 25);
 
+        exportarCSV.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    double[] luxIniciais = {
+                        Double.parseDouble(campoLuxInicialAzul.getText()),
+                        Double.parseDouble(campoLuxInicialVerde.getText()),
+                        Double.parseDouble(campoLuxInicialVermelho.getText())
+                    };
+                    double[] luxFinais = {
+                        Double.parseDouble(campoLuxFinalAzul.getText()),
+                        Double.parseDouble(campoLuxFinalVerde.getText()),
+                        Double.parseDouble(campoLuxFinalVermelho.getText())
+                    };
+                    double[] absorbancias = new double[3];
+
+                    for (int i = 0; i < absorbancias.length; i++) {
+                        absorbancias[i] = calculadora.CalculateAbsorvance(luxIniciais[i], luxFinais[i]);
+                    }
+
+                    String nomeQuimicoSelecionado = (String) dropdown.getSelectedItem();
+                    Quimico[] quimicoDados = new Quimico[3];
+                    Leitor(ArquivoDataset, nomeQuimicoSelecionado, quimicoDados);
+
+                    double[] concentracoes = new double[3];
+                    for (int i = 0; i < concentracoes.length; i++) {
+                        concentracoes[i] = calculadora.CalculateConcentration(
+                            quimicoDados[i].getAbsortividade(),
+                            quimicoDados[i].getCaminhoOptico(),
+                            absorbancias[i]
+                        );
+                    }
+
+                    JFileChooser seletorArquivo = new JFileChooser();
+                    seletorArquivo.setDialogTitle("Salvar cálculos como CSV");
+                    seletorArquivo.setSelectedFile(new File("calculos.csv"));
+
+                    if (seletorArquivo.showSaveDialog(janela) != JFileChooser.APPROVE_OPTION) {
+                        return;
+                    }
+
+                    File arquivo = seletorArquivo.getSelectedFile();
+                    if (!arquivo.getName().toLowerCase().endsWith(".csv")) {
+                        arquivo = new File(arquivo.getAbsolutePath() + ".csv");
+                    }
+
+                    exportarCalculosCSV(
+                        arquivo,
+                        nomeQuimicoSelecionado,
+                        luxIniciais,
+                        luxFinais,
+                        quimicoDados,
+                        absorbancias,
+                        concentracoes
+                    );
+                    JOptionPane.showMessageDialog(janela, "Cálculos exportados com sucesso.");
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(
+                        janela,
+                        "Informe valores numéricos válidos para os lux.",
+                        "Dados inválidos",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(
+                        janela,
+                        "Não foi possível exportar os cálculos: " + e.getMessage(),
+                        "Erro na exportação",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        });
+
+        exportarHTML.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    double[] luxIniciais = {
+                        Double.parseDouble(campoLuxInicialAzul.getText()),
+                        Double.parseDouble(campoLuxInicialVerde.getText()),
+                        Double.parseDouble(campoLuxInicialVermelho.getText())
+                    };
+                    double[] luxFinais = {
+                        Double.parseDouble(campoLuxFinalAzul.getText()),
+                        Double.parseDouble(campoLuxFinalVerde.getText()),
+                        Double.parseDouble(campoLuxFinalVermelho.getText())
+                    };
+                    double[] absorbancias = new double[3];
+
+                    for (int i = 0; i < absorbancias.length; i++) {
+                        absorbancias[i] = calculadora.CalculateAbsorvance(luxIniciais[i], luxFinais[i]);
+                    }
+
+                    String nomeQuimicoSelecionado = (String) dropdown.getSelectedItem();
+                    Quimico[] quimicoDados = new Quimico[3];
+                    Leitor(ArquivoDataset, nomeQuimicoSelecionado, quimicoDados);
+
+                    double[] concentracoes = new double[3];
+                    for (int i = 0; i < concentracoes.length; i++) {
+                        concentracoes[i] = calculadora.CalculateConcentration(
+                            quimicoDados[i].getAbsortividade(),
+                            quimicoDados[i].getCaminhoOptico(),
+                            absorbancias[i]
+                        );
+                    }
+
+                    JFileChooser seletorArquivo = new JFileChooser();
+                    seletorArquivo.setDialogTitle("Salvar cálculos como HTML");
+                    seletorArquivo.setSelectedFile(new File("calculos.html"));
+
+                    if (seletorArquivo.showSaveDialog(janela) != JFileChooser.APPROVE_OPTION) {
+                        return;
+                    }
+
+                    File arquivo = seletorArquivo.getSelectedFile();
+                    if (!arquivo.getName().toLowerCase().endsWith(".html")) {
+                        arquivo = new File(arquivo.getAbsolutePath() + ".html");
+                    }
+
+                    exportarCalculosHTML(
+                        arquivo,
+                        nomeQuimicoSelecionado,
+                        luxIniciais,
+                        luxFinais,
+                        quimicoDados,
+                        absorbancias,
+                        concentracoes
+                    );
+                    JOptionPane.showMessageDialog(janela, "Cálculos exportados com sucesso.");
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(
+                        janela,
+                        "Informe valores numéricos válidos para os lux.",
+                        "Dados inválidos",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(
+                        janela,
+                        "Não foi possível exportar os cálculos: " + e.getMessage(),
+                        "Erro na exportação",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        });
+
 
         janela.setLayout(null);
         button.setBounds(0,0,40,50);
@@ -299,6 +570,3 @@ public class Main{
 
 
 }
-
-
-
