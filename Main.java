@@ -208,8 +208,9 @@ public class Main{
       reader.close();
   }
 
- public static void min(String[] args) throws Exception {
+ public static void main(String[] args) throws Exception {
 
+   /*
     String ArquivoDataset = "dataset_quimicos_fotometro.csv";
 
     List<String> lista = pegarListaTodosQuimicos(ArquivoDataset);
@@ -242,10 +243,15 @@ public class Main{
       System.out.println("==========");
       double desvioPadrao = Calculator.desvioPadraoConcetracao(concentracoes);
       System.out.println("desvio padrão das concentrações: " + desvioPadrao);
+       */
 
-  }
+      InterfaceCalibracao interfaceCalibracao = new InterfaceCalibracao();
 
-    public static void main() throws Exception {
+      interfaceCalibracao.setVisible(true);
+
+ }
+
+ public static void mkain() throws Exception {
         String ArquivoDataset = "dataset_quimicos_fotometro.csv";
         Calculator calculadora = new Calculator();
 
