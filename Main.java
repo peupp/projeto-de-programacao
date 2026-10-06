@@ -251,7 +251,7 @@ public class Main{
 
  }
 
- public static void main() throws Exception {
+ public static void main(String[] args) throws Exception {
         InterfaceCalibracao interfaceCalibracao = new InterfaceCalibracao();
         boolean interfaceCalibracaoVisible = false;
         boolean interfacePrincipalVisible = true;
