@@ -208,7 +208,7 @@ public class Main{
       reader.close();
   }
 
- public static void main(String[] args) throws Exception {
+ public static void mkain(String[] args) throws Exception {
 
    /*
     String ArquivoDataset = "dataset_quimicos_fotometro.csv";
@@ -251,7 +251,10 @@ public class Main{
 
  }
 
- public static void mkain() throws Exception {
+ public static void main() throws Exception {
+        InterfaceCalibracao interfaceCalibracao = new InterfaceCalibracao();
+        boolean interfaceCalibracaoVisible = false;
+        boolean interfacePrincipalVisible = true;
         String ArquivoDataset = "dataset_quimicos_fotometro.csv";
         Calculator calculadora = new Calculator();
 
@@ -301,9 +304,11 @@ public class Main{
         JButton exportarCSV = new JButton("Exportar CSV");
         JButton exportarHTML = new JButton("Exportar HTML");
 
+        JButton trocarInterfaceCalibracao = new JButton("Interface Calibracao");
+        trocarInterfaceCalibracao.setBounds(5, 900, 200,30);
+
         JLabel respostaAbsorbancia = new JLabel("Resposta: ");
         JLabel respostaConcentracao = new JLabel("Resposta: ");
-
 
         JComboBox<String> dropdown = new JComboBox<>();
         for(String item : nomeQuimicos){
@@ -312,6 +317,7 @@ public class Main{
 
         dropdown.setBounds(5, 30, 150, 30);
 
+        janela.add(trocarInterfaceCalibracao);
         janela.add(dropdown);
         janela.add(labelSelecionarQuimico);
         janela.add(exportarCSV);
@@ -405,6 +411,15 @@ public class Main{
                 } catch (Exception e) {
                    e.printStackTrace();
                 }
+
+            }
+        });
+
+        trocarInterfaceCalibracao.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                janela.setVisible(false);
+                interfaceCalibracao.setVisible(true);
 
             }
         });
@@ -573,7 +588,10 @@ public class Main{
         janela.setSize(1100, 1000);
         janela.setLocationRelativeTo(null);
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        interfaceCalibracao.setAoVoltar(() -> janela.setVisible(true));
         janela.setVisible(true);
+
+
     }
 
 

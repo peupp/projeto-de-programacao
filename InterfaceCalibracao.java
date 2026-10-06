@@ -15,6 +15,9 @@ import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 
 public class InterfaceCalibracao extends JFrame {
+    private Runnable aoVoltar;
+
+
 
     // Entradas
     private final JTextField campoNome = new JTextField("Analito", 10);
@@ -48,6 +51,14 @@ public class InterfaceCalibracao extends JFrame {
         ((JComponent) getContentPane()).setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         grafico = criarGrafico();
+        JButton btnVoltar = new JButton("Voltar");
+        btnVoltar.addActionListener(e -> {
+            setVisible(false);
+            if (aoVoltar != null) aoVoltar.run();
+        });
+        JPanel topo = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        topo.add(btnVoltar);
+        add(topo, BorderLayout.NORTH);
 
         add(montarPainelEsquerdo(), BorderLayout.WEST);
         add(new ChartPanel(grafico), BorderLayout.CENTER);
@@ -55,7 +66,9 @@ public class InterfaceCalibracao extends JFrame {
         setSize(1000, 600);
         setLocationRelativeTo(null);
     }
-
+    public void setAoVoltar(Runnable aoVoltar) {
+        this.aoVoltar = aoVoltar;
+    }
     private JFreeChart criarGrafico() {
         XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(serieDados);   // índice 0
